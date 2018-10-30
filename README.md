@@ -1,4 +1,4 @@
-# subversion deploy tool
+# git deploy tool
 
 This script is use for deploy files by git.
 

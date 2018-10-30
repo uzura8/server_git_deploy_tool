@@ -1,6 +1,6 @@
 # subversion deploy tool
 
-This script is use for deploy files by subviersion.
+This script is use for deploy files by git.
 
 -----------
 How to use
@@ -24,7 +24,7 @@ $ chmod 700 execute_deploy.sh
 # sh execute_deploy.sh
 ~~~
 
-* cron setting
+* cron setting(ex: per 5 mins)
 ~~~
 #*/5 * * * * username /path_to_set_dir/execute_deploy.sh
 ~~~

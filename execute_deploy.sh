@@ -14,28 +14,38 @@ if [ ! -f $COMMON_FILE ]; then
 fi
 . $COMMON_FILE
 
-
 # execute main
 for SRC_DIR in ${SRC_DIRS}; do
   cd $SRC_DIR
-  SVN_STATUS_RESULT=`svn status`
+  GIT_BRANCH=`git branch | grep \*| awk '{print $2}'`
+  GIT_STATUS_RESULT="`git status | grep -e modified -e added -e deleted -e renamed -e copied -e updated`"
+  #echo $GIT_BRANCH # for debug
+  #echo "$GIT_STATUS_RESULT" # for debug
 
-  # if exists diff, not exicute update
-  if [ -n "${SVN_STATUS_RESULT}" ]; then
-    SUBJECT="[svn_update_error]${SRC_DIR}"
-    BODY="svn error at ${SRC_DIR}: ${SVN_STATUS_RESULT}"
-    echo ${BODY} | mail -s ${SUBJECT} ${ADMIN_MAIL}
-    #echo $SVN_STATUS_RESULT # for debug
-  else
-    SVN_UPDATE_RESULT=`svn update --username $SVN_USERNAME --password $SVN_PASSWORD --no-auth-cache --non-interactive | grep "^\(A\|B\|D\|U\|C\|G\|E\)\s"`
+  if [ -n "${GIT_BRANCH}" -a -z "${GIT_STATUS_RESULT}" ]; then
+    GIT_UPDATE_RESULT="`git pull --rebase $GIT_REMOTE $GIT_BRANCH`"
+    #echo "$GIT_UPDATE_RESULT" # for debug
 
     # if updated, send notice mail.
-    if [ -n "${SVN_UPDATE_RESULT}" ]; then
-      SUBJECT="[svn_updated]${SRC_DIR}"
-      BODY="svn updated at ${SRC_DIR}: ${SVN_UPDATE_RESULT}"
-      echo ${BODY} | mail -s ${SUBJECT} ${ADMIN_MAIL}
-      #echo $SVN_UPDATE_RESULT # for debug
+    if [ `echo "${GIT_UPDATE_RESULT}" | grep -v 'Already up-to-date'` ]; then
+      SUBJECT="[git_updated]${SRC_DIR}"
+      BODY="git updated at ${SRC_DIR}: ${GIT_UPDATE_RESULT}"
+      echo "${BODY}" | mail -s ${SUBJECT} ${ADMIN_MAIL}
+      #echo $SUBJECT # for debug
+      #echo "$BODY" # for debug
     fi
+  else
+    # if exists diff, not exicute update
+    if [ -z "${GIT_BRANCH}" ]; then
+      BODY="branch is not selected"
+    elif [ -n "${GIT_STATUS_RESULT}" ]; then
+      BODY="git error at ${SRC_DIR}:\n${GIT_STATUS_RESULT}"
+    fi
+
+    SUBJECT="[git_update_error]${SRC_DIR}"
+    echo "${BODY}" | mail -s ${SUBJECT} ${ADMIN_MAIL}
+    #echo $SUBJECT # for debug
+    #echo "${BODY}" # for debug
   fi
 done
 

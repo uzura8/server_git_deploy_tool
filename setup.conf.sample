@@ -1,16 +1,13 @@
 #setup.conf
 
 # source file path
-SRC_DIR="/var/www/sites/example.com"
-# If multiple sources on same svn account, use below setting
-#SRC_DIRS='
-#/var/www/sites/example01.com
-#/var/www/sites/example02.com
-#'
+SRC_DIRS='
+/var/www/sites/example01.com
+/var/www/sites/example02.com
+'
 
-# svn account
-SVN_USERNAME="username"
-SVN_PASSWORD="password"
+# git info
+GIT_REMOTE="origin"
 
 # email for send notice result
 ADMIN_MAIL="admin@example.com"

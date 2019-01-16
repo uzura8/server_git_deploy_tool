@@ -6,7 +6,7 @@ This script is use for deploy files by git.
 How to use
 -----------
 
-###　1. set config file ###
+### 1. set config file ###
 * Copy config file from sample and edit it for your enviroment
 
 ~~~

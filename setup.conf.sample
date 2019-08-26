@@ -12,3 +12,7 @@ GIT_REMOTE="origin"
 # email for send notice result
 ADMIN_MAIL="admin@example.com"
 
+# send email settings
+IS_SEND_MAIL_UPDATED=true
+IS_SEND_MAIL_ERROR=true
+

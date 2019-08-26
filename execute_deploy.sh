@@ -27,14 +27,16 @@ for SRC_DIR in ${SRC_DIRS}; do
     #echo "$GIT_UPDATE_RESULT" # for debug
 
     # if updated, send notice mail.
-    if [ `echo "${GIT_UPDATE_RESULT}" | grep -v 'Already up-to-date'` ]; then
-      SUBJECT="[git_updated]${SRC_DIR}"
-      BODY="git updated at ${SRC_DIR}: ${GIT_UPDATE_RESULT}"
-      echo "${BODY}" | mail -s ${SUBJECT} ${ADMIN_MAIL}
-      #echo $SUBJECT # for debug
-      #echo "$BODY" # for debug
+    if [ `echo "${GIT_UPDATE_RESULT}" | grep -E '^Updating [a-z0-9]{7}\.\.[a-z0-9]{7}'` ]; then
+      if "${IS_SEND_MAIL_UPDATED}"; then
+        SUBJECT="[git_updated]${SRC_DIR}"
+        BODY="git updated at ${SRC_DIR}: ${GIT_UPDATE_RESULT}"
+        echo "${BODY}" | mail -s ${SUBJECT} ${ADMIN_MAIL}
+        #echo $SUBJECT # for debug
+        #echo "$BODY" # for debug
+      fi
     fi
-  else
+  elif "${IS_SEND_MAIL_ERROR}"; then
     # if exists diff, not exicute update
     if [ -z "${GIT_BRANCH}" ]; then
       BODY="branch is not selected"

@@ -19,12 +19,9 @@ for SRC_DIR in ${SRC_DIRS}; do
   cd $SRC_DIR
   GIT_BRANCH=`git branch | grep \*| awk '{print $2}'`
   GIT_STATUS_RESULT="`git status | grep -e modified -e added -e deleted -e renamed -e copied -e updated`"
-  #echo $GIT_BRANCH # for debug
-  #echo "$GIT_STATUS_RESULT" # for debug
 
   if [ -n "${GIT_BRANCH}" -a -z "${GIT_STATUS_RESULT}" ]; then
     GIT_UPDATE_RESULT="`git pull --rebase $GIT_REMOTE $GIT_BRANCH`"
-    #echo "$GIT_UPDATE_RESULT" # for debug
 
     # if updated, send notice mail.
     if [ `echo "${GIT_UPDATE_RESULT}" | grep -E '^Updating [a-z0-9]{7}\.\.[a-z0-9]{7}'` ]; then
@@ -32,12 +29,9 @@ for SRC_DIR in ${SRC_DIRS}; do
         SUBJECT="[git_updated]${SRC_DIR}"
         BODY="git updated at ${SRC_DIR}: ${GIT_UPDATE_RESULT}"
         echo "${BODY}" | mail -s ${SUBJECT} ${ADMIN_MAIL}
-        #echo $SUBJECT # for debug
-        #echo "$BODY" # for debug
       fi
     fi
   elif "${IS_SEND_MAIL_ERROR}"; then
-    # if exists diff, not exicute update
     if [ -z "${GIT_BRANCH}" ]; then
       BODY="branch is not selected"
     elif [ -n "${GIT_STATUS_RESULT}" ]; then
@@ -46,8 +40,6 @@ for SRC_DIR in ${SRC_DIRS}; do
 
     SUBJECT="[git_update_error]${SRC_DIR}"
     echo "${BODY}" | mail -s ${SUBJECT} ${ADMIN_MAIL}
-    #echo $SUBJECT # for debug
-    #echo "${BODY}" # for debug
   fi
 done
 

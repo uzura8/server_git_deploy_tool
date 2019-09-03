@@ -1,6 +1,6 @@
 #setup.conf
 
-# source file path
+# source file paths
 SRC_DIRS='
 /var/www/sites/example01.com
 /var/www/sites/example02.com

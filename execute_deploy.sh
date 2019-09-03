@@ -18,7 +18,7 @@ fi
 for SRC_DIR in ${SRC_DIRS}; do
   cd $SRC_DIR
   GIT_BRANCH=`git branch | grep \*| awk '{print $2}'`
-  GIT_STATUS_RESULT="`git status | grep -e modified -e added -e deleted -e renamed -e copied -e updated`"
+  GIT_STATUS_RESULT="`git status | grep -e modified -e added -e deleted -e renamed -e copied -e updated -e untracked`"
   ERROR=""
 
   if [ -z "${GIT_BRANCH}" ]; then
